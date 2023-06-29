@@ -77,6 +77,7 @@ class NotesConroller{
             .whereLike("notes.title", `%${title}%`)
             .whereIn("name", filterTags)
             .innerJoin("notes","notes.id","tags.note_id")
+            .groupBy("notes.id")
             .orderBy("notes.title")
 
         } else {
@@ -88,7 +89,7 @@ class NotesConroller{
 
         const userTags = await knex("tags").where({user_id})
         const notesWithTags = notes.map(note => {
-            const noteTags = userTags.filter(tag => tag.note_id == note.id)
+            const noteTags = userTags.filter(tag => tag.note_id === note.id)
 
             return {
                 ...note,
